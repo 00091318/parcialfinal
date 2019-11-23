@@ -1,0 +1,65 @@
+*, ::before, ::after {
+    box-sizing: inherit;
+    margin: 0;
+    padding: 0;
+}
+
+:root, body {
+    height: 100%;
+    --main-bg-color: #F5F1ED;
+    --main-bg-dark-color: #08415C;
+    box-sizing: border-box;
+}
+
+body {
+   background-color: var(--main-bg-color);
+}
+
+nav {
+    background-color: var(--main-bg-dark-color);
+    height: 50px;
+    display: flex;
+    padding: 0em 1em;
+}
+
+.src-only {
+    display: none;
+}
+
+.brand .logo {
+    height: 100%;
+    width: 100px;
+    object-fit: cover;
+    object-position: center;
+}
+
+.actions {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    flex-direction: row-reverse;
+}
+
+
+
+.actions input[type=text] {
+    width: 100%;
+    border: 0px solid;
+    border-radius: 4px;
+    background-color: white;
+    background-image: url(searchicon.png);
+    background-position: calc(100% - 8px) 7px;
+    background-repeat: no-repeat;
+    background-size: 15px;
+    padding: 5px 17px 7px 6px;
+}
+
+
+
+.pokemon p{
+    border: 1px solid transparent;
+    padding: 1em;
+    margin: 1em;
+    border-radius: 2px;
+    box-shadow: 1px 1px 5px black;
+}

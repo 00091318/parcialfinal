@@ -7,7 +7,7 @@ router.get('/:username', userController.getOne);
 router.get('/', userController.getAll);
 
 router.post('/',userController.register);
-router.put('/:username', userController.update);
-router.delete('/:username',userController.delete);
+router.put('/:pokename', userController.update);
+router.delete('/:pokename',userController.delete);
 
 module.exports = router;

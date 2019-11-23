@@ -1,27 +1,14 @@
-const mongoose = require('mongoose'),
-    Schema = mongoose.Schema;
+const mongoose = require('mongoose');
+const {Schema} = mongoose;
+const bcrypt = require('bcrypt-nodejs');
 
-var UserSchema = Schema({
-    pokename: {
-        type: String,
-        required: true,
-        unique: true
-    },
-    name: String,
-    required: true,
-    type: {
-        type: String,
-        required: true
-    },
-    evolution: {
-        type: Boolean,
-        required: true
-    },
-    Firstability: string,
-    required: true
-}, {
-    secongability: string,
-    required: true
+//esquema de usuarios
+const userSchema = new Schema({
+    pokename:{type:String, unique:true, required:true},
+    type: {type:String, required: true},
+    evolution:{type: String},
+    ability:{type: string},
+    ability2:{type: string}
 });
 
-module.exports = mongoose.model("User", UserSchema);
+module.exports = mongoose.model('users',userSchema);

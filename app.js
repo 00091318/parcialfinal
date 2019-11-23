@@ -7,12 +7,19 @@ var sassMiddleware = require('node-sass-middleware');
 var mongoose = require('mongoose');
 var debug = require('debug')('blog:database');
 
-var indexRouter = require('./routes/index');
+var indexRouter = require('../routes/index');
 var usersRouter = require('./routes/users');
 var posts = require('./routes/posts');
 
 // Conect to database
-
+const MongoClient = require('mongodb').MongoClient;
+const uri = "mongodb+srv://00091318:0828BCF4@00091318-xgh3g.mongodb.net/test?retryWrites=true&w=majority";
+const client = new MongoClient(uri, { useNewUrlParser: true });
+client.connect(err => {
+  const collection = client.db("test").collection("devices");
+  // perform actions on the collection object
+  client.close();
+});
 mongoose.connect(process.env.MONGO_URI, {
   useCreateIndex: true,
   useNewUrlParser: true,

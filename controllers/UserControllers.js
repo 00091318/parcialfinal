@@ -1,129 +1,58 @@
-var User = require('../models/user');
-var debug = require('debug')('blog:user_controller');
+const User = require('../models/User');
+const userController = {};
 
-// Search a one user y database
-module.exports.getOne = (req, res, next) => {
-    debug("Search User", req.params);
-    User.findOne({
-            username: req.params.username
-        }, "-password -login_count")
-        .then((foundUser) => {
-            debug("Found User", foundUser);
-            if (foundUser)
-                return res.status(200).json(foundUser);
-            else
-                return res.status(400).json(null)
-        })
-        .catch(err => {
-            next(err);
-        });
+
+userController.index = async function (req, res, next) {
+    let users = await User.find();
+    return res.status(200).json(users);
 }
 
-module.exports.getAll = (req, res, next) => {
-    var perPage = Number(req.query.size) || 10,
-        page = req.query.page > 0 ? req.query.page : 0;
-
-    var sortProperty = req.query.sortby || "createdAt",
-        sort = req.query.sort || "desc";
-
-    debug("Usert List", {
-        size: perPage,
-        page,
-        sortby: sortProperty,
-        sort
+userController.findUser = async function (req, res, next) {
+    let { id } = req.params;
+    let user = await User.findById(id).catch(err => {
+        return next(res);
     });
+    return res.status(200).json(user);
+}
 
-    User.find({}, "-password -login_count")
-        .limit(perPage)
-        .skip(perPage * page)
-        .sort({
-            [sortProperty]: sort
-        })
-        .then((users) => {
-            debug("Found users", users);
-            return res.status(200).json(users)
-        }).catch(err => {
-            next(err);
-        });
+userController.store = async function (req, res, next) {
+    let user = new User();
+    user.userName = req.body.user;
+    user.rol = req.body.rol;
+
+    try {
+        await user.save();
+        return res.status(200).json({ "message": "pokemon agregado con exito" });
+    } catch (err) {
+        return res.status(500).json({ err: err, message: "Por favor revise sus datos" });
+    }
 
 }
 
-// New User
+userController.update = async function (req, res, next) {
+    let { id } = req.params;
+    let user = {
+        pokename: req.body.user,
+        type: req.body.type,
+        evolution:req.body.evolution,
+        ability: req.body.ability,
+        ability2: req.body.ability2
+    }
+    console.log(user);
+    try {
+        await User.update({ _id: id }, user);
+        res.status(200).json({ "message": "pokemon actualizado con exito" });
+    }
+    catch (err) {
+        return res.status(500).json({ err: err, message: "Por favor revise sus datos" });
+    }
+}
 
-module.exports.register = (req, res, next) => {
-    debug("New User", {
-        body: req.body
-    });
-    User.findOne({
-            username: req.body.username
-        }, "-password -login_count")
-        .then((foundUser) => {
-            if (foundUser) {
-                debug("Usuario duplicado");
-                throw new Error(`Usuario duplicado ${req.body.username}`);
-            } else {
-                let newUser = new User({
-                    username: req.body.username,
-                    first_name: req.body.firts_name || "",
-                    last_name: req.body.last_name || "",
-                    email: req.body.email,
-                    password: req.body.password /*TODO: Modificar, hacer hash del password*/
-                });
-                return newUser.save();
-            }
-        }).then(user => {
-            return res
-                .header('Location', '/users/' + user.username)
-                .status(201)
-                .json({
-                    username: user.username
-                });
-        }).catch(err => {
-            next(err);
-        });
+userController.delete = async function (req, res, next) {
+    let { id } = req.params;
+    await User.remove({ _id: id });
+    res.status(200).json({ "message": "pokemon Eliminado con exito" });
 }
 
 
-// Update user 
-
-module.exports.update = (req, res, next) => {
-    debug("Update user", {
-        username: req.params.username,
-        ...req.body
-    });
-
-    let update = {
-        ...req.body
-    };
-
-    User.findOneAndUpdate({
-            username: req.params.username
-        }, update, {
-            new: true
-        })
-        .then((updated) => {
-            if (updated)
-                return res.status(200).json(updated);
-            else
-                return res.status(400).json(null);
-        }).catch(err => {
-            next(err);
-        });
-}
-
-module.exports.delete = (req, res, next) => {
-
-    debug("Delete user", {
-        username: req.params.username,
-    });
-
-    User.findOneAndDelete({
-            username: req.params.username
-        })
-        .then((data) => {
-            if (data) res.status(200).json(data);
-            else res.status(404).send();
-        }).catch(err => {
-            next(err);
-        })
-}
+module.exports = userController;
