@@ -1,13 +1,13 @@
-const User = require('../models/User');
-const userController = {};
+const User = require('../models/users');
+const userControllers = {};
 
 
-userController.index = async function (req, res, next) {
+userControllers.index = async function (req, res, next) {
     let users = await User.find();
     return res.status(200).json(users);
 }
 
-userController.findUser = async function (req, res, next) {
+userControllers.findUser = async function (req, res, next) {
     let { id } = req.params;
     let user = await User.findById(id).catch(err => {
         return next(res);
@@ -15,7 +15,7 @@ userController.findUser = async function (req, res, next) {
     return res.status(200).json(user);
 }
 
-userController.store = async function (req, res, next) {
+userControllers.store = async function (req, res, next) {
     let user = new User();
     user.userName = req.body.user;
     user.rol = req.body.rol;
@@ -29,7 +29,7 @@ userController.store = async function (req, res, next) {
 
 }
 
-userController.update = async function (req, res, next) {
+userControllers.update = async function (req, res, next) {
     let { id } = req.params;
     let user = {
         pokename: req.body.user,
@@ -48,11 +48,11 @@ userController.update = async function (req, res, next) {
     }
 }
 
-userController.delete = async function (req, res, next) {
+userControllers.delete = async function (req, res, next) {
     let { id } = req.params;
     await User.remove({ _id: id });
     res.status(200).json({ "message": "pokemon Eliminado con exito" });
 }
 
 
-module.exports = userController;
+module.exports = userControllers;

@@ -25,7 +25,7 @@ module.exports.create = (req, res, next) => {
         })
         .then(user => {
             if (!user) {
-                throw new Error("El autor no existe");
+                throw new Error("no existe");
             } else {
 
                 let post = new Post({
